@@ -1,0 +1,8 @@
+{
+  "learning_rate": 0.00044303752452182633,
+  "epsilon": 0.02693883019285411,
+  "lambda_manifold": 0.6431172050131994,
+  "k_neighbors": 5,
+  "pgd_steps": 5,
+  "pgd_alpha": 0.00392156862745098
+}

@@ -1,0 +1,89 @@
+[
+  {
+    "number": 0,
+    "state": "TrialState.COMPLETE",
+    "value": 1.0782044219970703,
+    "params": {
+      "learning_rate": 0.00044303752452182633,
+      "epsilon": 0.02693883019285411,
+      "lambda_manifold": 0.6431172050131994,
+      "k_neighbors": 5,
+      "pgd_steps": 5
+    },
+    "user_attrs": {
+      "trial_dir": "results/tuning_zsmgm_smoke/trials/trial_0000",
+      "command": [
+        "/Users/briancf/Developer/repos/Information-Theoretic-Unlearning/.venv/bin/python",
+        "/Users/briancf/Developer/repos/Information-Theoretic-Unlearning/src/forget_full_class_main.py",
+        "-net",
+        "VGG16",
+        "-weight_path",
+        "checkpoints/VGG16PinsFaceRecognition.pth",
+        "-dataset",
+        "PinsFaceRecognition",
+        "-classes",
+        "105",
+        "-method",
+        "zsmgm",
+        "-forget_class",
+        "1",
+        "-results_dir",
+        "results/tuning_zsmgm_smoke/trials/trial_0000",
+        "-b",
+        "128",
+        "-seed",
+        "0",
+        "-zsmgm_learning_rate",
+        "0.000443037524522",
+        "-zsmgm_epsilon",
+        "0.0269388301929",
+        "-zsmgm_lambda_manifold",
+        "0.643117205013",
+        "-zsmgm_k_neighbors",
+        "5",
+        "-zsmgm_pgd_steps",
+        "5",
+        "-zsmgm_pgd_alpha",
+        "0.00392156862745",
+        "-device",
+        "mps",
+        "-data_root",
+        "/Users/briancf/Developer/repos/Unlearning/datasets/105_classes_pins_dataset"
+      ],
+      "runner_returncode": 0,
+      "stdout_path": "results/tuning_zsmgm_smoke/trials/trial_0000/runner_stdout.txt",
+      "stderr_path": "results/tuning_zsmgm_smoke/trials/trial_0000/runner_stderr.txt",
+      "elapsed_seconds": 228.4497539579752,
+      "status": "completed",
+      "results": {
+        "TestAcc": 92.64306640625,
+        "RetainTestAcc": 92.63545227050781,
+        "MIA": 0.0,
+        "df": 93.09896087646484,
+        "MethodTime": 209.25210094451904,
+        "dataset": "PinsFaceRecognition",
+        "net": "VGG16",
+        "method": "zsmgm",
+        "forget_class": "1",
+        "seed": 0,
+        "device": "mps",
+        "zsmgm_learning_rate": 0.000443037524522,
+        "zsmgm_epsilon": 0.0269388301929,
+        "zsmgm_lambda_manifold": 0.643117205013,
+        "zsmgm_k_neighbors": 5,
+        "zsmgm_pgd_steps": 5,
+        "zsmgm_pgd_alpha": 0.00392156862745
+      },
+      "score_components": {
+        "retain_gap": 0.07364547729492188,
+        "test_gap": 0.07356933593750004,
+        "mia": 0.0,
+        "df_gap": 0.9309896087646484
+      },
+      "score_penalties": {
+        "retain_floor_penalty": 0.0,
+        "test_floor_penalty": 0.0
+      }
+    }
+  }
+]

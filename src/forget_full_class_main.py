@@ -2,6 +2,7 @@
 
 import random
 import os
+import json
 import wandb
 #import optuna
 from typing import Tuple, List
@@ -26,7 +27,6 @@ import datasets
 import models
 import conf
 from training_utils import *
-import optuna
 
 """
 Get Args
@@ -39,20 +39,127 @@ parser.add_argument('-dataset', type=str, required=True, nargs='?',
                     help='dataset to train on')
 parser.add_argument('-classes', type=int, required=True,help='number of classes')
 parser.add_argument('-gpu', action='store_true', default=False, help='use gpu or not')
+parser.add_argument('-device', type=str, choices=['cpu', 'cuda', 'mps'], default=None,
+                    help='device override; defaults to cuda when -gpu is set, else cpu')
+parser.add_argument('-data_root', type=str, default=None,
+                    help='dataset root override')
+parser.add_argument('-results_dir', type=str, default='results',
+                    help='directory to save local result JSON files')
+parser.add_argument('-zsmgm_config_path', type=str, default=None,
+                    help='optional JSON file with ZS-MGM overrides')
+parser.add_argument('-zsmgm_learning_rate', type=float, default=None,
+                    help='override ZS-MGM learning rate')
+parser.add_argument('-zsmgm_epsilon', type=float, default=None,
+                    help='override ZS-MGM perturbation radius')
+parser.add_argument('-zsmgm_lambda_manifold', type=float, default=None,
+                    help='override ZS-MGM manifold penalty weight')
+parser.add_argument('-zsmgm_k_neighbors', type=int, default=None,
+                    help='override ZS-MGM proxy neighbor count')
+parser.add_argument('-zsmgm_pgd_steps', type=int, default=None,
+                    help='override ZS-MGM PGD step count')
+parser.add_argument('-zsmgm_pgd_alpha', type=float, default=None,
+                    help='override ZS-MGM PGD step size')
 parser.add_argument('-b', type=int, default=128, help='batch size for dataloader')
 parser.add_argument('-warm', type=int, default=1, help='warm up training phase')
 parser.add_argument('-lr', type=float, default=0.1, help='initial learning rate')
 parser.add_argument('-method', type=str, required=True, nargs='?',
-                    choices=['baseline', 'retrain','finetune','blindspot','amnesiac','UNSIR', 'ssd_tuning', 'graceful_forgetting', 'lipschitz_forgetting', 'scrub', 'gkt', 'emmn'],
+                    choices=['baseline', 'retrain','finetune','blindspot','amnesiac','UNSIR', 'ssd_tuning', 'graceful_forgetting', 'lipschitz_forgetting', 'zsmgm', 'scrub', 'gkt', 'emmn'],
                     help='select unlearning method from choice set')    
 parser.add_argument('-forget_class', type=str, required=True,nargs='?',help='class to forget',
                     choices=list(conf.class_dict))
 parser.add_argument('-epochs', type=int, default=1, help='number of epochs of unlearning method to use')
 parser.add_argument("-seed", type=int, default=0, help="seed for runs")
 
-args = parser.parse_args()
+
+def parse_args(argv=None):
+    return parser.parse_args(argv)
+
+
+def resolve_device(args):
+    requested_device = args.device
+    if requested_device is None:
+        requested_device = 'cuda' if args.gpu else 'cpu'
+
+    if requested_device == 'cuda' and not torch.cuda.is_available():
+        raise ValueError('CUDA requested but is not available in this environment.')
+
+    if requested_device == 'mps':
+        if not hasattr(torch.backends, 'mps') or not torch.backends.mps.is_available():
+            raise ValueError('MPS requested but is not available in this environment.')
+
+    return torch.device(requested_device)
+
+
+def load_zsmgm_overrides(config_path):
+    if config_path is None:
+        return {}
+
+    with open(config_path, 'r', encoding='utf-8') as config_file:
+        raw = json.load(config_file)
+
+    if not isinstance(raw, dict):
+        raise ValueError('zsmgm_config_path must point to a JSON object.')
+
+    overrides = {}
+    key_map = {
+        'learning_rate': 'zsmgm_learning_rate',
+        'zsmgm_learning_rate': 'zsmgm_learning_rate',
+        'epsilon': 'zsmgm_epsilon',
+        'zsmgm_epsilon': 'zsmgm_epsilon',
+        'lambda_manifold': 'zsmgm_lambda_manifold',
+        'zsmgm_lambda_manifold': 'zsmgm_lambda_manifold',
+        'k_neighbors': 'zsmgm_k_neighbors',
+        'zsmgm_k_neighbors': 'zsmgm_k_neighbors',
+        'pgd_steps': 'zsmgm_pgd_steps',
+        'zsmgm_pgd_steps': 'zsmgm_pgd_steps',
+        'pgd_alpha': 'zsmgm_pgd_alpha',
+        'zsmgm_pgd_alpha': 'zsmgm_pgd_alpha',
+    }
+
+    for raw_key, normalized_key in key_map.items():
+        if raw_key in raw:
+            overrides[normalized_key] = raw[raw_key]
+
+    return overrides
+
+
+def build_zsmgm_parameters(args):
+    parameters = {
+        'zsmgm_learning_rate': 8.63e-3,
+        'zsmgm_epsilon': 3.97e-2,
+        'zsmgm_lambda_manifold': 2.42e-1,
+        'zsmgm_k_neighbors': 10,
+        'zsmgm_pgd_steps': 20,
+        'zsmgm_pgd_alpha': 1.0 / 255.0,
+    }
+    parameters.update(load_zsmgm_overrides(args.zsmgm_config_path))
+
+    cli_overrides = {
+        'zsmgm_learning_rate': args.zsmgm_learning_rate,
+        'zsmgm_epsilon': args.zsmgm_epsilon,
+        'zsmgm_lambda_manifold': args.zsmgm_lambda_manifold,
+        'zsmgm_k_neighbors': args.zsmgm_k_neighbors,
+        'zsmgm_pgd_steps': args.zsmgm_pgd_steps,
+        'zsmgm_pgd_alpha': args.zsmgm_pgd_alpha,
+    }
+    for key, value in cli_overrides.items():
+        if value is not None:
+            parameters[key] = value
+
+    parameters['zsmgm_learning_rate'] = float(parameters['zsmgm_learning_rate'])
+    parameters['zsmgm_epsilon'] = float(parameters['zsmgm_epsilon'])
+    parameters['zsmgm_lambda_manifold'] = float(parameters['zsmgm_lambda_manifold'])
+    parameters['zsmgm_k_neighbors'] = int(parameters['zsmgm_k_neighbors'])
+    parameters['zsmgm_pgd_steps'] = int(parameters['zsmgm_pgd_steps'])
+    parameters['zsmgm_pgd_alpha'] = float(parameters['zsmgm_pgd_alpha'])
+
+    return parameters
 
 if __name__=='__main__':
+    args = parse_args()
+
+    runtime_device = resolve_device(args)
+    print(f'Using device: {runtime_device}')
 
     # # Set seeds
     torch.manual_seed(args.seed)
@@ -83,18 +190,18 @@ if __name__=='__main__':
     # get network
     return_activations = (args.method=='gkt')
     net = getattr(models, args.net)(num_classes=args.classes, return_activations=return_activations)
-    net.load_state_dict(torch.load(args.weight_path))
+    net.load_state_dict(torch.load(args.weight_path, map_location=runtime_device))
     
 
     # for bad teacher
     unlearning_teacher = getattr(models, args.net)(num_classes=args.classes)
-
-    if args.gpu:
-        net = net.cuda()
-        unlearning_teacher = unlearning_teacher.cuda()
+    net = net.to(runtime_device)
+    unlearning_teacher = unlearning_teacher.to(runtime_device)
 
     # For celebritiy faces
-    root = "105_classes_pins_dataset" if args.dataset == "PinsFaceRecognition" else "./data"
+    root = args.data_root
+    if root is None:
+        root = "105_classes_pins_dataset" if args.dataset == "PinsFaceRecognition" else "./data"
 
     # Scale for ViT (faster training, better performance)
     img_size = 224 if args.net == "ViT" else 32
@@ -154,6 +261,8 @@ if __name__=='__main__':
         scrub_alpha= 1
         scrub_gamma= 5
 
+    zsmgm_parameters = build_zsmgm_parameters(args)
+
     parameters = {
         "dampening_constant": 1, 
         "selection_weighting": 1,
@@ -165,7 +274,8 @@ if __name__=='__main__':
         "amplitude": 0.1,
         'lipschitz_weighting': lipschitz_weighting,
         "learning_rate": learning_rate,
-        "n_samples": 25
+        "n_samples": 25,
+        **zsmgm_parameters,
     }
 
     kwargs = {
@@ -185,21 +295,39 @@ if __name__=='__main__':
         'full_train_dl': full_train_dl,
         'num_classes': args.classes,
         'dataset_name': args.dataset,
-        'device': 'cuda' if args.gpu else 'cpu',
+        'device': str(runtime_device),
         'model_name': args.net,
         "n_samples": parameters["n_samples"],
         'learning_rate': parameters["learning_rate"],
         "ewc_lambda": parameters["ewc_lambda"],
         "amplitude": parameters["amplitude"],
         "frequency": parameters["frequency"],
-        "lipschitz_weighting": parameters['lipschitz_weighting']
+        "lipschitz_weighting": parameters['lipschitz_weighting'],
+        "zsmgm_learning_rate": parameters["zsmgm_learning_rate"],
+        "zsmgm_epsilon": parameters["zsmgm_epsilon"],
+        "zsmgm_lambda_manifold": parameters["zsmgm_lambda_manifold"],
+        "zsmgm_k_neighbors": parameters["zsmgm_k_neighbors"],
+        "zsmgm_pgd_steps": parameters["zsmgm_pgd_steps"],
+        "zsmgm_pgd_alpha": parameters["zsmgm_pgd_alpha"],
     }
     #############
     
 
     ################
 
-    wandb.init(project=f"PINSFINAL_LipschitzFinal_{args.net}_{args.dataset}_fullclass", name=f'{args.method}_{select_val}_{args.forget_class}')
+    wandb.init(
+        project=f"PINSFINAL_LipschitzFinal_{args.net}_{args.dataset}_fullclass",
+        name=f'{args.method}_{select_val}_{args.forget_class}',
+        config={
+            'dataset': args.dataset,
+            'net': args.net,
+            'method': args.method,
+            'forget_class': args.forget_class,
+            'seed': args.seed,
+            'device': str(runtime_device),
+            **zsmgm_parameters,
+        },
+    )
     # Time the method
     import time
 
@@ -209,15 +337,33 @@ if __name__=='__main__':
 
     end = time.time()
     time_elapsed = end - start
-    wandb.log(
-    {
+    results = {
         'TestAcc': testacc,
         'RetainTestAcc': retainacc,
         'MIA': mia,
-        'df': d_f, 
-        "MethodTime": time_elapsed,                   
+        'df': d_f,
+        'MethodTime': time_elapsed,
+        'dataset': args.dataset,
+        'net': args.net,
+        'method': args.method,
+        'forget_class': args.forget_class,
+        'seed': args.seed,
+        'device': str(runtime_device),
     }
+    if args.method == 'zsmgm':
+        results.update(zsmgm_parameters)
+
+    os.makedirs(args.results_dir, exist_ok=True)
+    results_path = os.path.join(
+        args.results_dir,
+        f"full_class_{args.dataset}_{args.net}_{args.method}_forget-{args.forget_class}_seed-{args.seed}.json",
     )
+    with open(results_path, 'w', encoding='utf-8') as results_file:
+        json.dump(results, results_file, indent=2)
+
+    wandb.log(results)
+    print(json.dumps(results, indent=2))
+    print(f"saved results to {results_path}")
     print("done logging...")
     wandb.finish()
 

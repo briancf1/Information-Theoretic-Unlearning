@@ -1,0 +1,17 @@
+{
+  "os":  "macOS-26.3-arm64-arm-64bit",
+  "python":  "CPython 3.12.9",
+  "startedAt":  "2026-05-01T04:44:20.937454Z",
+  "program":  "/Users/briancf/Developer/repos/Information-Theoretic-Unlearning/wandb_test.py",
+  "codePath":  "wandb_test.py",
+  "codePathLocal":  "wandb_test.py",
+  "git":  {
+    "remote":  "https://github.com/jwf40/Information-Theoretic-Unlearning.git",
+    "commit":  "c96761408b4997381c2feab4fbe613aa4c1f2b12"
+  },
+  "email":  "canchola.brian@gmail.com",
+  "root":  "/Users/briancf/Developer/repos/Information-Theoretic-Unlearning",
+  "host":  "Brians-MacBook-Pro.local",
+  "executable":  "/Users/briancf/Developer/repos/Information-Theoretic-Unlearning/.venv/bin/python",
+  "writerId":  "3myfz9dvqxeqds3qn78p05x0jlpngn6q"
+}

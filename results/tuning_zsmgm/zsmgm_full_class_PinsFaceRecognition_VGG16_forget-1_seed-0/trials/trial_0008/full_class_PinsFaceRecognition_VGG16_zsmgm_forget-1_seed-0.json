@@ -1,0 +1,19 @@
+{
+  "TestAcc": 92.6031494140625,
+  "RetainTestAcc": 92.60099029541016,
+  "MIA": 0.0,
+  "df": 92.70833587646484,
+  "MethodTime": 214.83589887619019,
+  "dataset": "PinsFaceRecognition",
+  "net": "VGG16",
+  "method": "zsmgm",
+  "forget_class": "1",
+  "seed": 0,
+  "device": "mps",
+  "zsmgm_learning_rate": 0.000534366823266,
+  "zsmgm_epsilon": 0.0722091769961,
+  "zsmgm_lambda_manifold": 0.0903039728889,
+  "zsmgm_k_neighbors": 5,
+  "zsmgm_pgd_steps": 20,
+  "zsmgm_pgd_alpha": 0.00392156862745
+}

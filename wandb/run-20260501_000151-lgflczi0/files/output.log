@@ -1,0 +1,15 @@
+{
+  "TestAcc": 89.24434661865234,
+  "RetainTestAcc": 89.73876953125,
+  "MIA": 0.29605263157894735,
+  "df": 38.54166793823242,
+  "MethodTime": 227.0552361011505,
+  "dataset": "PinsFaceRecognition",
+  "net": "VGG16",
+  "method": "zsmgm",
+  "forget_class": "1",
+  "seed": 0,
+  "device": "mps"
+}
+saved results to results/full_class_PinsFaceRecognition_VGG16_zsmgm_forget-1_seed-0.json
+done logging...

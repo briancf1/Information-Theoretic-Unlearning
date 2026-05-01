@@ -1,0 +1,37 @@
+_wandb:
+    value:
+        cli_version: 0.26.1
+        e:
+            3myfz9dvqxeqds3qn78p05x0jlpngn6q:
+                codePath: wandb_test.py
+                codePathLocal: wandb_test.py
+                email: canchola.brian@gmail.com
+                executable: /Users/briancf/Developer/repos/Information-Theoretic-Unlearning/.venv/bin/python
+                git:
+                    commit: c96761408b4997381c2feab4fbe613aa4c1f2b12
+                    remote: https://github.com/jwf40/Information-Theoretic-Unlearning.git
+                host: Brians-MacBook-Pro.local
+                os: macOS-26.3-arm64-arm-64bit
+                program: /Users/briancf/Developer/repos/Information-Theoretic-Unlearning/wandb_test.py
+                python: CPython 3.12.9
+                root: /Users/briancf/Developer/repos/Information-Theoretic-Unlearning
+                startedAt: "2026-05-01T04:44:20.937454Z"
+                writerId: 3myfz9dvqxeqds3qn78p05x0jlpngn6q
+        m: []
+        python_version: 3.12.9
+        t:
+            "3":
+                - 2
+                - 16
+            "4": 3.12.9
+            "5": 0.26.1
+            "12": 0.26.1
+            "13": darwin-arm64
+architecture:
+    value: CNN
+dataset:
+    value: CIFAR-100
+epochs:
+    value: 10
+learning_rate:
+    value: 0.02

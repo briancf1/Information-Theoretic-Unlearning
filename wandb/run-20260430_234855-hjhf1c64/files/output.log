@@ -1,0 +1,27 @@
+0.5 0.0003 25
+0.5 25 0.0003
+{'lower_bound': 1, 'exponent': 1, 'magnitude_diff': None, 'min_layer': -1, 'max_layer': -1, 'forget_threshold': 1, 'dampening_constant': 1, 'selection_weighting': 1, 'n_epochs': 1, 'use_quad_weight': False, 'ewc_lambda': 1, 'lipschitz_weighting': 0.5, 'learning_rate': 0.0003, 'n_samples': 25}
+<class 'models.VGG16'>
+/Users/briancf/Developer/repos/Information-Theoretic-Unlearning/.venv/lib/python3.12/site-packages/torchvision/transforms/v2/_deprecated.py:42: UserWarning: The transform `ToTensor()` is deprecated and will be removed in a future release. Instead, please use `v2.Compose([v2.ToImage(), v2.ToDtype(torch.float32, scale=True)])`.Output is equivalent up to float precision.
+  warnings.warn(
+tensor(245.4925, device='mps:0', grad_fn=<DivBackward0>)
+tensor(3358.4395, device='mps:0')
+tensor(6427.3750, device='mps:0', grad_fn=<DivBackward0>)
+tensor(31.8573, device='mps:0', grad_fn=<DivBackward0>)
+tensor(628.1304, device='mps:0')
+tensor(833.7857, device='mps:0', grad_fn=<DivBackward0>)
+{
+  "TestAcc": 89.00502014160156,
+  "RetainTestAcc": 89.76895904541016,
+  "MIA": 0.06578947368421052,
+  "df": 1.5625,
+  "MethodTime": 216.0569589138031,
+  "dataset": "PinsFaceRecognition",
+  "net": "VGG16",
+  "method": "lipschitz_forgetting",
+  "forget_class": "1",
+  "seed": 0,
+  "device": "mps"
+}
+saved results to results/full_class_PinsFaceRecognition_VGG16_lipschitz_forgetting_forget-1_seed-0.json
+done logging...

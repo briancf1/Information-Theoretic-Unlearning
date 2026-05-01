@@ -1,0 +1,60 @@
+{
+  "os":  "macOS-26.3-arm64-arm-64bit",
+  "python":  "CPython 3.12.9",
+  "startedAt":  "2026-05-01T06:49:00.557274Z",
+  "args":  [
+    "-net",
+    "VGG16",
+    "-dataset",
+    "PinsFaceRecognition",
+    "-classes",
+    "105",
+    "-device",
+    "mps",
+    "-method",
+    "zsmgm",
+    "-forget_class",
+    "1",
+    "-weight_path",
+    "checkpoints/VGG16PinsFaceRecognition.pth",
+    "-data_root",
+    "/Users/briancf/Developer/repos/Unlearning/datasets/105_classes_pins_dataset",
+    "-seed",
+    "0",
+    "-zsmgm_config_path",
+    "/Users/briancf/Developer/repos/Information-Theoretic-Unlearning/results/tuning_zsmgm/zsmgm_full_class_PinsFaceRecognition_VGG16_forget-1_seed-0/best_config.json"
+  ],
+  "program":  "/Users/briancf/Developer/repos/Information-Theoretic-Unlearning/src/forget_full_class_main.py",
+  "codePath":  "src/forget_full_class_main.py",
+  "codePathLocal":  "src/forget_full_class_main.py",
+  "git":  {
+    "remote":  "https://github.com/jwf40/Information-Theoretic-Unlearning.git",
+    "commit":  "c96761408b4997381c2feab4fbe613aa4c1f2b12"
+  },
+  "email":  "canchola.brian@gmail.com",
+  "root":  "/Users/briancf/Developer/repos/Information-Theoretic-Unlearning",
+  "host":  "Brians-MacBook-Pro.local",
+  "executable":  "/Users/briancf/Developer/repos/Information-Theoretic-Unlearning/.venv/bin/python",
+  "cpu_count":  10,
+  "cpu_count_logical":  10,
+  "disk":  {
+    "/":  {
+      "total":  "994610155520",
+      "used":  "313232830464"
+    }
+  },
+  "memory":  {
+    "total":  "17179869184"
+  },
+  "apple":  {
+    "name":  "Apple M5",
+    "ecpuCores":  6,
+    "pcpuCores":  4,
+    "gpuCores":  10,
+    "memoryGb":  16,
+    "swapTotalBytes":  "6442450944",
+    "ramTotalBytes":  "17179869184",
+    "macModel":  "Mac17,2"
+  },
+  "writerId":  "7vbb1fmm21b3i2w8bzc5nmw7tu85vkfs"
+}

@@ -1,0 +1,24 @@
+Using device: mps
+tensor(-1.8973) tensor(2.0246) tensor(-0.1413)
+2
+{
+  "TestAcc": 90.98371887207031,
+  "RetainTestAcc": 91.17060852050781,
+  "MIA": 0.3881578947368421,
+  "df": 73.95833587646484,
+  "MethodTime": 259.42102122306824,
+  "dataset": "PinsFaceRecognition",
+  "net": "VGG16",
+  "method": "zsmgm",
+  "forget_class": "1",
+  "seed": 0,
+  "device": "mps",
+  "zsmgm_learning_rate": 0.006683372548,
+  "zsmgm_epsilon": 0.0051229850015,
+  "zsmgm_lambda_manifold": 0.0115426759736,
+  "zsmgm_k_neighbors": 1,
+  "zsmgm_pgd_steps": 5,
+  "zsmgm_pgd_alpha": 0.00392156862745
+}
+saved results to /Users/briancf/Developer/repos/Information-Theoretic-Unlearning/results/tuning_zsmgm/zsmgm_full_class_PinsFaceRecognition_VGG16_forget-1_seed-0/trials/trial_0010/full_class_PinsFaceRecognition_VGG16_zsmgm_forget-1_seed-0.json
+done logging...

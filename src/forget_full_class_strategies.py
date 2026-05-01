@@ -17,6 +17,7 @@ from metrics import UnLearningScore, get_membership_attack_prob
 from utils import *
 import ssd as ssd
 import lipschitz
+import zsmgm as zsmgm_impl
 from models import *
 import conf
 import timeit
@@ -121,9 +122,11 @@ def retrain(
     device,
     **kwargs,
 ):
-    for layer in model.children():
-        if hasattr(layer, "reset_parameters"):
-            layer.reset_parameters()
+    def reset_module(module):
+        if hasattr(module, "reset_parameters"):
+            module.reset_parameters()
+
+    model.apply(reset_module)
     if model_name == "ViT":
         epochs = getattr(conf, f"{dataset_name}_{model_name}_EPOCHS")
         milestones = getattr(conf, f"{dataset_name}_{model_name}_MILESTONES")
@@ -685,6 +688,66 @@ def ssd_tuning(
 
     # Dampen selected parameters
     pdr.modify_weight(original_importances, sample_importances)
+
+    return get_metric_scores(
+        model,
+        unlearning_teacher,
+        retain_train_dl,
+        retain_valid_dl,
+        forget_train_dl,
+        forget_valid_dl,
+        valid_dl,
+        device,
+    )
+
+def graceful_forgetting(*args, **kwargs):
+    return lipschitz_forgetting(*args, **kwargs)
+
+
+def zsmgm(
+    model,
+    unlearning_teacher,
+    retain_train_dl,
+    retain_valid_dl,
+    forget_train_dl,
+    forget_valid_dl,
+    valid_dl,
+    dataset_name,
+    model_name,
+    device,
+    zsmgm_learning_rate=8.63e-3,
+    zsmgm_epsilon=3.97e-2,
+    zsmgm_k_neighbors=10,
+    zsmgm_pgd_steps=20,
+    zsmgm_pgd_alpha=1.0 / 255.0,
+    zsmgm_lambda_manifold=2.42e-1,
+    **kwargs,
+):
+    if dataset_name != "PinsFaceRecognition" or model_name != "VGG16":
+        raise ValueError(
+            "zsmgm is currently implemented only for PinsFaceRecognition with VGG16."
+        )
+
+    parameters = {
+        "learning_rate": zsmgm_learning_rate,
+        "epsilon": zsmgm_epsilon,
+        "k_neighbors": zsmgm_k_neighbors,
+        "pgd_steps": zsmgm_pgd_steps,
+        "pgd_alpha": zsmgm_pgd_alpha,
+        "lambda_manifold": zsmgm_lambda_manifold,
+    }
+
+    optimizer = torch.optim.SGD(
+        model.parameters(),
+        lr=parameters["learning_rate"],
+        momentum=0.9,
+    )
+    unlearner = zsmgm_impl.ZSMGM(model, optimizer, device, parameters)
+
+    try:
+        unlearner.modify_weight(forget_train_dl)
+    finally:
+        unlearner.close()
 
     return get_metric_scores(
         model,

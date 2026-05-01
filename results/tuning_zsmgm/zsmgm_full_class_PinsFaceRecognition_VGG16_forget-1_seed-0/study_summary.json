@@ -1,0 +1,47 @@
+{
+  "study_name": "zsmgm_full_class_PinsFaceRecognition_VGG16_forget-1_seed-0",
+  "best_trial_number": 17,
+  "best_value": 1.9907353210449217,
+  "best_params": {
+    "learning_rate": 0.0016065643411417676,
+    "epsilon": 0.04660383637790141,
+    "lambda_manifold": 9.215082688708396,
+    "k_neighbors": 10,
+    "pgd_steps": 5,
+    "pgd_alpha": 0.00392156862745098
+  },
+  "best_results": {
+    "TestAcc": 92.3864517211914,
+    "RetainTestAcc": 92.3941879272461,
+    "MIA": 0.0,
+    "df": 91.92708587646484,
+    "MethodTime": 278.8068850040436,
+    "dataset": "PinsFaceRecognition",
+    "net": "VGG16",
+    "method": "zsmgm",
+    "forget_class": "1",
+    "seed": 0,
+    "device": "mps",
+    "zsmgm_learning_rate": 0.00160656434114,
+    "zsmgm_epsilon": 0.0466038363779,
+    "zsmgm_lambda_manifold": 9.21508268871,
+    "zsmgm_k_neighbors": 10,
+    "zsmgm_pgd_steps": 5,
+    "zsmgm_pgd_alpha": 0.00392156862745
+  },
+  "weights": {
+    "retain_weight": 1.0,
+    "test_weight": 1.0,
+    "mia_weight": 2.0,
+    "df_weight": 2.0
+  },
+  "floors": {
+    "retain_floor": 89.5,
+    "test_floor": 89.0,
+    "constraint_penalty": 5.0
+  },
+  "trial_wandb_mode": "disabled",
+  "n_trials": 20,
+  "study_dir": "/Users/briancf/Developer/repos/Information-Theoretic-Unlearning/results/tuning_zsmgm/zsmgm_full_class_PinsFaceRecognition_VGG16_forget-1_seed-0",
+  "best_config_path": "/Users/briancf/Developer/repos/Information-Theoretic-Unlearning/results/tuning_zsmgm/zsmgm_full_class_PinsFaceRecognition_VGG16_forget-1_seed-0/best_config.json"
+}

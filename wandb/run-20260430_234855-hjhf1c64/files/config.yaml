@@ -1,0 +1,84 @@
+_wandb:
+    value:
+        cli_version: 0.26.1
+        e:
+            ewzjc0wv5a3hx38jpfyd4zufkoaxix9d:
+                apple:
+                    ecpuCores: 6
+                    gpuCores: 10
+                    macModel: Mac17,2
+                    memoryGb: 16
+                    name: Apple M5
+                    pcpuCores: 4
+                    ramTotalBytes: "17179869184"
+                    swapTotalBytes: "5368709120"
+                args:
+                    - -net
+                    - VGG16
+                    - -dataset
+                    - PinsFaceRecognition
+                    - -classes
+                    - "105"
+                    - -device
+                    - mps
+                    - -method
+                    - lipschitz_forgetting
+                    - -forget_class
+                    - "1"
+                    - -weight_path
+                    - checkpoints/VGG16PinsFaceRecognition.pth
+                    - -data_root
+                    - /Users/briancf/Developer/repos/Unlearning/datasets/105_classes_pins_dataset
+                    - -seed
+                    - "0"
+                codePath: src/forget_full_class_main.py
+                codePathLocal: src/forget_full_class_main.py
+                cpu_count: 10
+                cpu_count_logical: 10
+                disk:
+                    /:
+                        total: "994610155520"
+                        used: "312171290624"
+                email: canchola.brian@gmail.com
+                executable: /Users/briancf/Developer/repos/Information-Theoretic-Unlearning/.venv/bin/python
+                git:
+                    commit: c96761408b4997381c2feab4fbe613aa4c1f2b12
+                    remote: https://github.com/jwf40/Information-Theoretic-Unlearning.git
+                host: Brians-MacBook-Pro.local
+                memory:
+                    total: "17179869184"
+                os: macOS-26.3-arm64-arm-64bit
+                program: /Users/briancf/Developer/repos/Information-Theoretic-Unlearning/src/forget_full_class_main.py
+                python: CPython 3.12.9
+                root: /Users/briancf/Developer/repos/Information-Theoretic-Unlearning
+                startedAt: "2026-05-01T04:48:55.994516Z"
+                writerId: ewzjc0wv5a3hx38jpfyd4zufkoaxix9d
+        m: []
+        python_version: 3.12.9
+        t:
+            "1":
+                - 1
+                - 5
+                - 11
+                - 35
+                - 41
+                - 49
+                - 51
+                - 53
+            "2":
+                - 1
+                - 5
+                - 11
+                - 35
+                - 41
+                - 49
+                - 51
+                - 53
+            "3":
+                - 2
+                - 13
+            "4": 3.12.9
+            "5": 0.26.1
+            "6": 5.7.0
+            "12": 0.26.1
+            "13": darwin-arm64

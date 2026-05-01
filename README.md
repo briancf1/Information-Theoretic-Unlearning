@@ -44,9 +44,27 @@ scipy
 
 You will need a wandb.ai account to use the implemented logging. Feel free to replace with any other logger of your choice.
 
-## Modifying JiT unlearning
+## Modifying JiT and ZS-MGM unlearning
 
-JiT functions are in Lipschitz.py, and is referred to throughout as lipschitz_forgetting. To change sigma and eta, set them in the respective forget_..._main.py file per unlearning task.
+JiT functions are in Lipschitz.py, and are referred to throughout as lipschitz_forgetting. ZS-MGM defaults are set in forget_full_class_main.py.
+
+For Pins full-class runs, ZS-MGM parameters can now be overridden directly from the CLI with zsmgm-specific flags or loaded from a JSON file with zsmgm_config_path. The full-class runner writes the effective ZS-MGM settings into the local results JSON and WandB config.
+
+To tune ZS-MGM on Pins full-class runs with Optuna, use tune_full_class_zsmgm.py. It searches the same ranges used in the newer Unlearning repo:
+
+```bash
+python src/tune_full_class_zsmgm.py \
+      -net VGG16 \
+      -dataset PinsFaceRecognition \
+      -classes 105 \
+      -forget_class 1 \
+      -weight_path checkpoints/VGG16PinsFaceRecognition.pth \
+      -data_root /path/to/105_classes_pins_dataset \
+      -device mps \
+      -n_trials 20
+```
+
+The tuner minimizes a normalized weighted score using retain accuracy, test accuracy, MIA, and forget-set accuracy. It saves best_config.json, study_summary.json, and per-trial outputs under results/tuning_zsmgm/ by default.
 
 <!-- ## Citing this work
 

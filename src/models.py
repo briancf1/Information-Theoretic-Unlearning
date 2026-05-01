@@ -6,8 +6,9 @@ And https://github.com/weiaicunzai/pytorch-cifar100 (better performance) <- Refe
 from torch import nn
 import numpy as np
 import torch
+import torch.nn.functional as F
 from torchvision.models import resnet18, vgg11, vgg16
-from transformers import ViTModel, ViTFeatureExtractor
+from transformers import ViTModel
 from resnet import ResNet, BasicBlock
 
 

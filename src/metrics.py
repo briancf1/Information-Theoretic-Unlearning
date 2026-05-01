@@ -77,9 +77,7 @@ def get_membership_attack_prob(retain_loader, forget_loader, test_loader, model)
         retain_loader, forget_loader, test_loader, model
     )
     # clf = SVC(C=3,gamma='auto',kernel='rbf')
-    clf = LogisticRegression(
-        class_weight="balanced", solver="lbfgs", multi_class="multinomial"
-    )
+    clf = LogisticRegression(class_weight="balanced", solver="lbfgs")
     clf.fit(X_r, Y_r)
     results = clf.predict(X_f)
     return results.mean()

@@ -1,0 +1,13 @@
+{
+  "TestAcc": 89.00502014160156,
+  "RetainTestAcc": 89.76895904541016,
+  "MIA": 0.06578947368421052,
+  "df": 1.5625,
+  "MethodTime": 216.0569589138031,
+  "dataset": "PinsFaceRecognition",
+  "net": "VGG16",
+  "method": "lipschitz_forgetting",
+  "forget_class": "1",
+  "seed": 0,
+  "device": "mps"
+}

@@ -1,0 +1,1 @@
+{"device":"mps","forget_class":"1","dataset":"PinsFaceRecognition","RetainTestAcc":89.76895904541016,"TestAcc":89.00502014160156,"_runtime":216,"net":"VGG16","_step":0,"MethodTime":216.0569589138031,"_timestamp":1.7776111533065212e+09,"seed":0,"MIA":0.06578947368421052,"method":"lipschitz_forgetting","df":1.5625,"_wandb":{"runtime":216}}

@@ -500,6 +500,9 @@ def ssd_tuning(
         device,
     )
 
+def graceful_forgetting(*args, **kwargs):
+    return lipschitz_forgetting(*args, **kwargs)
+
 def lipschitz_forgetting(
     model,
     unlearning_teacher,

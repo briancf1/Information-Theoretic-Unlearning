@@ -19,9 +19,7 @@ from unlearn import *
 from metrics import UnLearningScore, get_membership_attack_prob
 from utils import *
 import ssd as ssd
-import label_guided_ssd as gforget
 import conf
-import label_free_ssd as lfssd
 import lipschitz
 
 def get_gf_loader(forget_train_dl):
@@ -369,7 +367,7 @@ def lfssd_tuning(
     # load the trained model
     optimizer = torch.optim.SGD(model.parameters(), lr=0.1)
 
-    pdr = lfssd.ParameterPerturber(model, optimizer, device, parameters)
+    pdr = ssd.ParameterPerturber(model, optimizer, device, parameters)
 
     model = model.eval()
 
@@ -471,57 +469,27 @@ def graceful_forgetting(
     amplitude=0.1,
     **kwargs
 ):
-    parameters = {
-        "lower_bound": 1,  # unused
-        "exponent": 1,  # unused
-        "magnitude_diff": None,  # unused
-        "min_layer": -1,  # -1: all layers are available for modification
-        "max_layer": -1,  # -1: all layers are available for modification
-        "forget_threshold": 1,  # unused
-        "dampening_constant": dampening_constant,  # Lambda from paper
-        "selection_weighting": selection_weighting,  # Alpha from paper
-        "n_epochs": n_epochs,
-        "use_quad_weight": use_quad_weight,
-        "ewc_lambda":ewc_lambda
-    }
-
-    # load the trained model
-    optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
-
-    retain_train_subset = random.sample(
-        retain_train_dl.dataset, int(len(forget_train_dl.dataset))
-    )    
-    subset_retain_dl = DataLoader(retain_train_subset, batch_size=forget_train_dl.batch_size)
-
-    #gfdl = get_smoothed_loader(forget_train_dl, num_classes, eps)
-
-    pdr = gforget.GracefulForgetting(model, optimizer, device, parameters)
-    gfdl = get_gf_loader(forget_train_dl)
-
-    spectral_loader = pdr.get_spectral_dl(gfdl, num_classes=num_classes, amplitude=amplitude, frequency=frequency)
-
-    #model = model.eval()
-
-    # Calculation of the forget set importances
-    sample_importances = pdr.calc_importance(forget_train_dl)
-
-    # Calculate the importances of D (see paper); this can also be done at any point before forgetting.
-    original_importances = pdr.calc_importance(full_train_dl)
-
-    # Dampen selected parameters
-    #pdr.remap_weight(original_importances, sample_importances, gfdl)
-    pdr.spectral_forgetting(original_importances, sample_importances, spectral_loader, subset_retain_dl)
-    del(gfdl)
-    del(spectral_loader)
-    return get_metric_scores(
-        model,
-        unlearning_teacher,
-        retain_train_dl,
-        retain_valid_dl,
-        forget_train_dl,
-        forget_valid_dl,
-        valid_dl,
-        device,
+    return lipschitz_forgetting(
+        model=model,
+        unlearning_teacher=unlearning_teacher,
+        retain_train_dl=retain_train_dl,
+        retain_valid_dl=retain_valid_dl,
+        forget_train_dl=forget_train_dl,
+        forget_valid_dl=forget_valid_dl,
+        valid_dl=valid_dl,
+        dampening_constant=dampening_constant,
+        selection_weighting=selection_weighting,
+        full_train_dl=full_train_dl,
+        device=device,
+        num_classes=num_classes,
+        eps=eps,
+        use_quad_weight=use_quad_weight,
+        n_epochs=n_epochs,
+        learning_rate=learning_rate,
+        ewc_lambda=ewc_lambda,
+        frequency=frequency,
+        amplitude=amplitude,
+        **kwargs,
     )
 
 

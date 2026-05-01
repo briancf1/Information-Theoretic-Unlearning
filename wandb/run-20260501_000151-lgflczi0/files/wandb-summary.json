@@ -1,0 +1,1 @@
+{"device":"mps","MethodTime":227.0552361011505,"df":38.54166793823242,"method":"zsmgm","_runtime":227,"TestAcc":89.24434661865234,"MIA":0.29605263157894735,"_wandb":{"runtime":227},"RetainTestAcc":89.73876953125,"_step":0,"dataset":"PinsFaceRecognition","forget_class":"1","seed":0,"_timestamp":1.7776119402841358e+09,"net":"VGG16"}

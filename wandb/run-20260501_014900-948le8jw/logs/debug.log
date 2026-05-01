@@ -1,0 +1,24 @@
+2026-05-01 01:49:00,558 INFO    MainThread:16090 [wandb_setup.py:_flush():81] Current SDK version is 0.26.1
+2026-05-01 01:49:00,558 INFO    MainThread:16090 [wandb_setup.py:_flush():81] Configure stats pid to 16090
+2026-05-01 01:49:00,558 INFO    MainThread:16090 [wandb_setup.py:_flush():81] Loading settings from environment variables
+2026-05-01 01:49:00,558 INFO    MainThread:16090 [wandb_init.py:setup_run_log_directory():723] Logging user logs to /Users/briancf/Developer/repos/Information-Theoretic-Unlearning/wandb/run-20260501_014900-948le8jw/logs/debug.log
+2026-05-01 01:49:00,558 INFO    MainThread:16090 [wandb_init.py:setup_run_log_directory():724] Logging internal logs to /Users/briancf/Developer/repos/Information-Theoretic-Unlearning/wandb/run-20260501_014900-948le8jw/logs/debug-internal.log
+2026-05-01 01:49:00,558 INFO    MainThread:16090 [wandb_init.py:init():850] calling init triggers
+2026-05-01 01:49:00,558 INFO    MainThread:16090 [wandb_init.py:init():855] wandb.init called with sweep_config: {}
+config: {'dataset': 'PinsFaceRecognition', 'net': 'VGG16', 'method': 'zsmgm', 'forget_class': '1', 'seed': 0, 'device': 'mps', 'zsmgm_learning_rate': 0.0016065643411417676, 'zsmgm_epsilon': 0.04660383637790141, 'zsmgm_lambda_manifold': 9.215082688708396, 'zsmgm_k_neighbors': 10, 'zsmgm_pgd_steps': 5, 'zsmgm_pgd_alpha': 0.00392156862745098, '_wandb': {}}
+2026-05-01 01:49:00,558 INFO    MainThread:16090 [wandb_init.py:init():898] starting backend
+2026-05-01 01:49:00,804 INFO    MainThread:16090 [wandb_init.py:init():913] sending inform_init request
+2026-05-01 01:49:01,257 INFO    MainThread:16090 [wandb_init.py:init():918] backend started and connected
+2026-05-01 01:49:01,259 INFO    MainThread:16090 [wandb_init.py:init():988] updated telemetry
+2026-05-01 01:49:01,289 INFO    MainThread:16090 [wandb_init.py:init():1011] communicating run to backend with 90.0 second timeout
+2026-05-01 01:49:01,627 INFO    MainThread:16090 [wandb_init.py:init():1056] starting run threads in backend
+2026-05-01 01:49:01,659 INFO    MainThread:16090 [wandb_run.py:_console_start():2554] atexit reg
+2026-05-01 01:49:01,659 INFO    MainThread:16090 [wandb_run.py:_redirect():2403] redirect: wrap_raw
+2026-05-01 01:49:01,659 INFO    MainThread:16090 [wandb_run.py:_redirect():2472] Wrapping output streams.
+2026-05-01 01:49:01,659 INFO    MainThread:16090 [wandb_run.py:_redirect():2495] Redirects installed.
+2026-05-01 01:49:01,661 INFO    MainThread:16090 [wandb_init.py:init():1094] run started, returning control to user process
+2026-05-01 01:53:27,425 INFO    MainThread:16090 [wandb_run.py:_finish():2321] finishing run canchola-brian-johns-hopkins-university/PINSFINAL_LipschitzFinal_VGG16_PinsFaceRecognition_fullclass/948le8jw
+2026-05-01 01:53:27,425 INFO    MainThread:16090 [wandb_run.py:_atexit_cleanup():2520] got exitcode: 0
+2026-05-01 01:53:27,425 INFO    MainThread:16090 [wandb_run.py:_restore():2502] restore
+2026-05-01 01:53:27,426 INFO    MainThread:16090 [wandb_run.py:_restore():2508] restore done
+2026-05-01 01:53:28,236 INFO    MainThread:16090 [wandb_run.py:_footer_sync_info():3889] logging synced files
