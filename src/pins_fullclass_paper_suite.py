@@ -101,7 +101,13 @@ def resolve_forget_classes(args):
 
 def resolve_data_root(args, repo_root):
     if args.data_root is not None:
-        return Path(args.data_root)
+        data_root = Path(args.data_root)
+        if not make_repo_local_path(data_root, repo_root).exists():
+            raise FileNotFoundError(
+                f'data_root {args.data_root!r} does not exist relative to {repo_root}. '
+                'Pass a valid Pins dataset directory.'
+            )
+        return data_root
 
     candidates = [
         Path('105_classes_pins_dataset'),
@@ -111,7 +117,12 @@ def resolve_data_root(args, repo_root):
     for candidate in candidates:
         if make_repo_local_path(candidate, repo_root).exists():
             return candidate
-    return None
+    candidate_text = ', '.join(str(candidate) for candidate in candidates)
+    raise FileNotFoundError(
+        'Could not find the PinsFaceRecognition dataset automatically. '
+        f'Checked: {candidate_text}. '
+        'Pass -data_root with the directory that contains the class folders.'
+    )
 
 
 def resolve_zsmgm_config(args, repo_root):
